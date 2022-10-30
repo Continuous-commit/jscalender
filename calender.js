@@ -9,29 +9,29 @@ function specify_calender(month) {
   console.log(`       ${month}月 ${year}`);
   console.log(" 日 月 火 水 木 金 土");
 
-  const firstDate = new Date(year, month - 1, 1); // 月の最初の日(monthは 0~11)
-  const lastDate = new Date(year, month, 0); // 月の最後の日
-  var firstDayNum = firstDate.getDay(); // 月の最初の曜日(数値)
-  const lastDateNum = lastDate.getDate(); // 月の最後の日にち
+  const startDate = new Date(year, month - 1, 1); // 月の最初の日(monthは 0~11)
+  const endDate = new Date(year, month, 0); // 月の最後の日
+  let startDayNum = startDate.getDay(); // 月の最初の曜日(数値)
 
-  process.stdout.write('   '.repeat(firstDayNum));
+  process.stdout.write('   '.repeat(startDayNum));
 
-  for(let i = 1; i < lastDateNum + 1; i++){
-    process.stdout.write(i.toString().padStart(2) + " ");
-    firstDayNum++;
-    if (firstDayNum % 7 === 0) console.log("\n");
+  for(let date = startDate; date <= endDate; date.setDate(date.getDate() + 1)){
+    process.stdout.write(date.getDate().toString().padStart(2) + " ");
+    if (date.getDay() === 6) console.log("");
   }
-  console.log("\n");
+  console.log("");
 }
 
-program.parse(process.argv);
-let month = program.args[0]; // 月をcommander.args配列から取り出す
+program.option("-m, --month <month>").parse(process.argv);
+const options = program.opts();
 
-if (month === undefined) {
+if (options.month === undefined) {
   month = date.getMonth();
   specify_calender(month + 1);
-} else if(month >= 1 && month <= 12) {
-  specify_calender(month);
-} else if(month > 12) {
+} else if(options.month >= 1 && options.month <= 12) {
+  specify_calender(options.month);
+} else if(options.month > 12) {
   console.log("1~12までの数字を指定しましょう");
+} else {
+  console.log("正しくコマンドを打ちましょう")
 }
